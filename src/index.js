@@ -12,7 +12,8 @@ console.log(linkArquivo);
 
 fs.readFile(linkArquivo, "utf-8", (error, texto) => {
   //utf-8 passando o encoder do tipo de texto, latino
-  verificarPalavrasDuplicadas(texto);
+  quebraEmParagrafos(texto);
+  //   verificarPalavrasDuplicadas(texto);
 });
 
 //Criar um array com as palavras
@@ -26,15 +27,29 @@ fs.readFile(linkArquivo, "utf-8", (error, texto) => {
         }
     */
 
+function quebraEmParagrafos(texto) {
+  const paragrafos = texto.toLowerCase().split("\n");
+  const contagem = paragrafos.map((paragrafo) => {
+    return verificarPalavrasDuplicadas(paragrafo);
+  });
+  console.log(contagem);
+}
+
+function limpaPalavra(palavra) {
+  return palavra.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ""); //Tirando todos os caracteres especiais
+}
+
 function verificarPalavrasDuplicadas(texto) {
   const listaPalavras = texto.split(" ");
   const resultado = {};
   //   objeto[propriedade] = valor;
-  listaPalavras;
   listaPalavras.forEach((palavra) => {
-    resultado[palavra] = (resultado[palavra] || 0) + 1; //Verifica se a propriedade já existe: Se existir, incrementa o valor atual em 1. Se não existir, utiliza 0 como valor inicial e adiciona 1.
+    if (palavra.length >= 3) {
+      const palavraLimpa = limpaPalavra(palavra);
+      resultado[palavraLimpa] = (resultado[palavraLimpa] || 0) + 1; //Verifica se a propriedade já existe: Se existir, incrementa o valor atual em 1. Se não existir, utiliza 0 como valor inicial e adiciona 1.
+    }
   });
-  console.log(resultado);
+  return resultado;
 }
 
 /*
