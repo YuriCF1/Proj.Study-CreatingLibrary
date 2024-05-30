@@ -28,10 +28,17 @@ fs.readFile(linkArquivo, "utf-8", (error, texto) => {
     */
 
 function quebraEmParagrafos(texto) {
-  const paragrafos = texto.toLowerCase().split("\n");
-  const contagem = paragrafos.map((paragrafo) => {
-    return verificarPalavrasDuplicadas(paragrafo);
+  const paragrafos = texto.toLowerCase().split("\n"); //Separando usando as quebras de linha
+  const contagem = paragrafos.flatMap((paragrafo) => {
+    //[1,2,3] | [1,2,3, [4,5]] => [1,2,3,4,5]
+    //RESOLVE ISSO COM REDUCE = NOTAS ABAIXO
+    if (!paragrafo) return [];
+    return verificarPalavrasDuplicadas(paragrafo); //Usando o flatMap, o resultado é o mesmo do que se fazer o que está abaixo. Mas performático, não preciso percorrer o array 2 vezes
   });
+  // .filter((paragraf) => paragraf) //Tirando os espaços vazios resultante das quebras de linha. Já String vazia é 'false'
+  // .map((paragrafo) => {
+  // return verificarPalavrasDuplicadas(paragrafo);
+  // });
   console.log(contagem);
 }
 
@@ -39,8 +46,8 @@ function limpaPalavra(palavra) {
   return palavra.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ""); //Tirando todos os caracteres especiais
 }
 
-function verificarPalavrasDuplicadas(texto) {
-  const listaPalavras = texto.split(" ");
+function verificarPalavrasDuplicadas(textoParagrafo) {
+  const listaPalavras = textoParagrafo.split(" ");
   const resultado = {};
   //   objeto[propriedade] = valor;
   listaPalavras.forEach((palavra) => {
@@ -52,6 +59,12 @@ function verificarPalavrasDuplicadas(texto) {
   return resultado;
 }
 
+//____________________________NOTAS____________________________
+/*
+Na notação de ponto, propriedade se refere ao nome exato de uma propriedade já existente no objeto (ou será criada uma nova). 
+Já na notação de colchete, propriedade se refere a uma variável ou espera receber o resultado de alguma expressão, 
+por isso é normalmente utilizado em iterações (loops) ou quando se espera receber chaves de propriedades diversas. 
+Para utilizar a notação de colchetes de forma similar à de ponto, o nome da propriedade deve ser passado como string, por exemplo, objeto[“propriedade”].*/
 /*
 //CAMINHO RELATIVO
 const path = require('path');
@@ -64,4 +77,19 @@ const caminhoRelativo = path.relative(__dirname, caminhoAbsoluto);
 
 // Exibe o caminho relativo
 console.log(caminhoRelativo);
+*/
+
+/*
+TIRANDO OS PARÁGRAFOS COM REDUCE
+const paragrafos = ["código", "js", "", "web", "", "array"];
+
+const result = paragrafos.reduce((acum, paragrafo) => {
+ if (paragrafo) {
+   return [...acum, paragrafo];
+ }
+ return acum;
+}, []);
+
+console.log(result);
+
 */
