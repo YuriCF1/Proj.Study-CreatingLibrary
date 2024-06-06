@@ -27,6 +27,7 @@ export function contaPalavras(texto) {
   // return verificarPalavrasDuplicadas(paragrafo);
   // });
   console.log(contagem);
+  return contagem;
 }
 
 function extraiParagrafos(texto) {
