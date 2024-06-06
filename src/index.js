@@ -1,20 +1,7 @@
+//__________________THINK BEFORE CODE__________________
 // 1- Pegar um arquivo de texto
 // 2- Processar o conteúdo
 // 3- Pensar como as informações processadas serão disponibilizadas
-
-// const caminhoArquivo = require("../arquivos/texto-web.txt"); //require não funciona pois ele só recebe arquivos módulos ou equivalentes como JSON
-
-const fs = require("fs"); //File Sysyem
-
-const caminhoArquivo = process.argv; //Argument Vector =  Pega os valores que vem do terminal e colocam no array. No caso, pega o caminho do texto
-const linkArquivo = caminhoArquivo[2];
-console.log(linkArquivo);
-
-fs.readFile(linkArquivo, "utf-8", (error, texto) => {
-  //utf-8 passando o encoder do tipo de texto, latino
-  quebraEmParagrafos(texto);
-  //   verificarPalavrasDuplicadas(texto);
-});
 
 //Criar um array com as palavras
 //Contas as ocorrencias de cada palavra
@@ -27,9 +14,29 @@ fs.readFile(linkArquivo, "utf-8", (error, texto) => {
         }
     */
 
-function quebraEmParagrafos(texto) {
-  const paragrafos = texto.toLowerCase().split("\n"); //Separando usando as quebras de linha
-  const contagem = paragrafos.flatMap((paragrafo) => {
+// const caminhoArquivo = require("../arquivos/texto-web.txt"); //require não funciona pois ele só recebe arquivos módulos ou equivalentes como JSON
+
+const trataErros = require("./erros/funcoesErros");
+
+const fs = require("fs"); //File Sysyem
+
+const caminhoArquivo = process.argv; //Argument Vector =  Pega os valores que vem do terminal e colocam no array. No caso, pega o caminho do texto
+const linkArquivo = caminhoArquivo[2];
+
+fs.readFile(linkArquivo, "utf-8", (erro, texto) => {
+  //utf-8 passando o encoder do tipo de texto, latino
+  //OBS: Temos que tratar o erro onde importa, se não tratar aqui, o erro só é percebido no lowerCase, o que não faz sentido
+  try {
+    if (erro) throw erro; ///Normalmente o throw é usado para lançar algo que deu errado em alguma função
+    contaPalavras(texto);
+  } catch (error) {
+    console.log(trataErros(erro));
+  }
+});
+
+function contaPalavras(texto) {
+  const pagrafosExtraidos = extraiParagrafos(texto);
+  const contagem = pagrafosExtraidos.flatMap((paragrafo) => {
     //[1,2,3] | [1,2,3, [4,5]] => [1,2,3,4,5]
     //RESOLVE ISSO COM REDUCE = NOTAS ABAIXO
     if (!paragrafo) return [];
@@ -40,6 +47,10 @@ function quebraEmParagrafos(texto) {
   // return verificarPalavrasDuplicadas(paragrafo);
   // });
   console.log(contagem);
+}
+
+function extraiParagrafos(texto) {
+  return (paragrafos = texto.toLowerCase().split("\n")); //Separando usando as quebras de linha
 }
 
 function limpaPalavra(palavra) {
