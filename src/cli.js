@@ -4,6 +4,27 @@ import fs from "fs";
 import { contaPalavras } from "./index.js";
 import { montaSaidaArquivo } from "./helpers.js";
 
+import { Command } from "commander";
+
+const program = new Command();
+
+program
+  .version("0.0.1")
+  .option("-t, --texto <string>", "caminho do texto a ser processado")
+  .option(
+    "-d",
+    "--destino <string",
+    "caminho da pasta para salvar arquivo de resultados"
+  )
+  .action((options) => {
+    const { texto, destino } = options;
+    if (!texto || !destino) {
+      console.error("Error, favor inserir caminho de origem e destino.");
+      program.help();
+      return;
+    }
+  });
+
 const caminhoArquivo = process.argv;
 const linkArquivo = caminhoArquivo[2];
 const endereco = caminhoArquivo[3];
