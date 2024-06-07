@@ -3,6 +3,7 @@ import trataErros from "./erros/funcoesErros.js";
 import fs from "fs";
 import { contaPalavras } from "./index.js";
 import { montaSaidaArquivo } from "./helpers.js";
+import path from "path";
 
 import { Command } from "commander";
 
@@ -12,8 +13,7 @@ program
   .version("0.0.1")
   .option("-t, --texto <string>", "caminho do texto a ser processado")
   .option(
-    "-d",
-    "--destino <string",
+    "-d, --destino <string>",
     "caminho da pasta para salvar arquivo de resultados"
   )
   .action((options) => {
@@ -23,22 +23,42 @@ program
       program.help();
       return;
     }
+
+    const caminhoTexto = path.resolve(texto);
+    const caminhoDestino = path.resolve(destino);
+
+    try {
+      processaArquivo(caminhoTexto, caminhoDestino);
+      console.log("Texto processado com sucesso");
+    } catch (error) {
+      console.error("Ocorreu um erro no processamento");
+    }
   });
 
-const caminhoArquivo = process.argv;
-const linkArquivo = caminhoArquivo[2];
-const endereco = caminhoArquivo[3];
+program.parse();
 
-fs.readFile(linkArquivo, "utf-8", (erro, texto) => {
-  try {
-    if (erro) throw erro;
-    const resultado = contaPalavras(texto);
-    criaESalvaArquivo(resultado, endereco);
-  } catch (erro) {
-    trataErros(erro);
-  }
-});
+/*
+APÓS A IMPLEMENTAÇÃO DA BIBLIOTECA Command NO CÓDIGO ACIMA, A LININHA DE COMANDO AGORA É ASSIM E ERA ASSIM
+node src/cli.js -t arquivos/texto-web.txt -d ./resultados
+node src/cli.jg arquivos/text-web.txt ./resultados
+*/
 
+
+// const caminhoArquivo = process.argv;
+// const linkArquivo = caminhoArquivo[2];
+// const endereco = caminhoArquivo[3];
+
+function processaArquivo(texto, destino) {
+  fs.readFile(texto, "utf-8", (erro, texto) => {
+    try {
+      if (erro) throw erro;
+      const resultado = contaPalavras(texto);
+      criaESalvaArquivo(resultado, destino);
+    } catch (erro) {
+      trataErros(erro);
+    }
+  });
+}
 // async function criaESalvaArquivo(listaPalavra, endereco) {
 //   const arquivoNovo = `${endereco}/resultado.txt`;
 //   const textoPalavras = JSON.stringify(listaPalavra);
@@ -50,8 +70,8 @@ fs.readFile(linkArquivo, "utf-8", (erro, texto) => {
 //   }
 // }
 
-function criaESalvaArquivo(listaPalavra, endereco) {
-  const arquivoNovo = `${endereco}/resultado.txt`;
+function criaESalvaArquivo(listaPalavra, destino) {
+  const arquivoNovo = `${destino}/resultado.txt`;
   // const textoPalavras = JSON.stringify(listaPalavra);
   const textoPalavras = montaSaidaArquivo(listaPalavra);
   fs.promises
