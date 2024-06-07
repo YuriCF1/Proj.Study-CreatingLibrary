@@ -14,8 +14,8 @@
         }
     */
 
-export function contaPalavras(texto) {
-  const pagrafosExtraidos = extraiParagrafos(texto);
+export function contaPalavras(textoCompleto) {
+  const pagrafosExtraidos = extraiParagrafos(textoCompleto);
   const contagem = pagrafosExtraidos.flatMap((paragrafo) => {
     //[1,2,3] | [1,2,3, [4,5]] => [1,2,3,4,5]
     //RESOLVE ISSO COM REDUCE = NOTAS ABAIXO
@@ -26,7 +26,6 @@ export function contaPalavras(texto) {
   // .map((paragrafo) => {
   // return verificarPalavrasDuplicadas(paragrafo);
   // });
-  console.log(contagem);
   return contagem;
 }
 
