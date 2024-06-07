@@ -2,6 +2,7 @@
 import trataErros from "./erros/funcoesErros.js";
 import fs from "fs";
 import { contaPalavras } from "./index.js";
+import { montaSaidaArquivo } from "./helpers.js";
 
 const caminhoArquivo = process.argv;
 const linkArquivo = caminhoArquivo[2];
@@ -22,7 +23,7 @@ fs.readFile(linkArquivo, "utf-8", (erro, texto) => {
 //   const textoPalavras = JSON.stringify(listaPalavra);
 //   try {
 //     await fs.promises.writeFile(arquivoNovo, textoPalavras);
-//     console.log("Arquivo Criado");
+//     ("Arquivo Criado");
 //   } catch (erro) {
 //     throw erro;
 //   }
@@ -30,19 +31,20 @@ fs.readFile(linkArquivo, "utf-8", (erro, texto) => {
 
 function criaESalvaArquivo(listaPalavra, endereco) {
   const arquivoNovo = `${endereco}/resultado.txt`;
-  const textoPalavras = JSON.stringify(listaPalavra);
+  // const textoPalavras = JSON.stringify(listaPalavra);
+  const textoPalavras = montaSaidaArquivo(listaPalavra);
   fs.promises
     .writeFile(arquivoNovo, textoPalavras) //writefile não retorna nada
     .then(() => {
       //then é o responsável para dar a conclusão de uma promise, que pode ter como retorno qualquer tipo de dado
-      console.log("Arquivo criado");
+      ("Arquivo criado");
     })
     .catch((erro) => {
       throw erro;
     })
     .finally(() => {
       //Independentemente do resultado que acontece, se for sucesso ou falha, ele acontece. Muito útil para fechar conexões com banco de dados
-      console.log("Operação finalizada");
+      ("Operação finalizada");
     });
 }
 
