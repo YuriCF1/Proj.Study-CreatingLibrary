@@ -4,6 +4,7 @@ import fs from "fs";
 import { contaPalavras } from "./index.js";
 import { montaSaidaArquivo } from "./helpers.js";
 import path from "path";
+import chalk from "chalk";
 
 import { Command } from "commander";
 
@@ -19,7 +20,7 @@ program
   .action((options) => {
     const { texto, destino } = options;
     if (!texto || !destino) {
-      console.error("Error, favor inserir caminho de origem e destino.");
+      console.error(chalk.red("Error, favor inserir caminho de origem e destino."));
       program.help();
       return;
     }
@@ -29,7 +30,7 @@ program
 
     try {
       processaArquivo(caminhoTexto, caminhoDestino);
-      console.log("Texto processado com sucesso");
+      console.log(chalk.green("Texto processado com sucesso"));
     } catch (error) {
       console.error("Ocorreu um erro no processamento");
     }
@@ -42,7 +43,6 @@ APÓS A IMPLEMENTAÇÃO DA BIBLIOTECA Command NO CÓDIGO ACIMA, A LININHA DE COM
 node src/cli.js -t arquivos/texto-web.txt -d ./resultados
 node src/cli.jg arquivos/text-web.txt ./resultados
 */
-
 
 // const caminhoArquivo = process.argv;
 // const linkArquivo = caminhoArquivo[2];
